@@ -6,10 +6,38 @@ interface PresetGridProps {
     isConnected: boolean;
 }
 
+class PresetGroup {
+    public startIndex: number;
+    public endIndex: number;
+    public caption: string;
+    public presets: number[];
+
+    constructor(startIndex: number, endIndex: number, caption: string) {
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        this.caption = caption;
+
+        this.presets = new Array(4);
+        for (let i = startIndex; i <= endIndex; i++) {
+            this.presets.push(i);
+        }
+    }
+}
+
 export const PresetGrid: React.FC<PresetGridProps> = ({ currentPreset, onSelectPreset, isConnected }) => {
     // Generate array [0..63]
-    const presets = Array.from({ length: 64 }, (_, i) => i);
 
+    const presetGroups: PresetGroup[] = [
+        new PresetGroup(0, 3, 'UAFX Pedals'),
+        new PresetGroup(4, 7, 'Matcheless Spit'),
+        new PresetGroup(8, 11, 'Fender Vibroverb'),
+        new PresetGroup(12, 15, 'Matchless SC30'),
+        new PresetGroup(16, 19, 'Dumble Tweed'),
+        new PresetGroup(20, 23, 'Fender Pro'),
+        new PresetGroup(24, 27, 'Vox AC30'),
+    ];
+
+    //const presets = Array.from({ length: 64 }, (_, i) => i);
 
     const handlePrev = () => {
         onSelectPreset(Math.max(0, currentPreset - 1));
@@ -22,7 +50,7 @@ export const PresetGrid: React.FC<PresetGridProps> = ({ currentPreset, onSelectP
     return (
         <div className="section-card">
             <h2 className="flex items-center gap-3 mb-6 text-2xl font-bold text-neural-n100">
-                All Presets (0-63)
+                Presets Disponíveis
             </h2>
             <div className="grid grid-cols-2 gap-3 mb-6 sm:grid-cols-3 lg:grid-cols-5 ">
                 <button
@@ -40,21 +68,27 @@ export const PresetGrid: React.FC<PresetGridProps> = ({ currentPreset, onSelectP
                     Next <span className="inline-block ml-2">→</span>
                 </button>
             </div>
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-2 sm:gap-3">
-                {presets.map((preset) => (
-                    <button
-                        key={preset}
-                        className={`btn-preset ${currentPreset === preset ? 'active' : ''}`}
-                        onClick={() => onSelectPreset(preset)}
-                        disabled={!isConnected}
-                    >
-                        <div className="flex flex-col items-center">
-                            <span className="text-sm font-bold">{preset}</span>
+            {presetGroups.map((presetGroup) => (
+                <div className="section-card">
+                    <div className="mb-8">
+                        <h3 className="mb-3 text-lg font-semibold text-neural-n90">{presetGroup.caption}</h3>
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                            {presetGroup.presets.map((preset) => (
+                                <button
+                                    key={preset}
+                                    className={`btn-preset ${currentPreset === preset ? 'active' : ''}`}
+                                    onClick={() => onSelectPreset(preset)}
+                                    disabled={!isConnected}
+                                >
+                                    <div className="flex flex-col items-center">
+                                        <span className="text-sm font-bold">{preset}</span>
+                                    </div>
+                                </button>
+                            ))}
                         </div>
-                    </button>
-
-                ))}
-            </div>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 };
