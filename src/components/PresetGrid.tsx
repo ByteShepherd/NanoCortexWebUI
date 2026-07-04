@@ -10,16 +10,45 @@ class PresetGroup {
     public startIndex: number;
     public endIndex: number;
     public caption: string;
-    public presets: number[];
+    public presets: Preset[];
 
     constructor(startIndex: number, endIndex: number, caption: string) {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.caption = caption;
 
-        this.presets = new Array(4);
+        this.presets = new Array<Preset>(4);
+        let fakeIndex = 0;
         for (let i = startIndex; i <= endIndex; i++) {
-            this.presets.push(i);
+            let preset = new Preset(i, fakeIndex);
+            this.presets.push(preset);
+            fakeIndex++;
+        }
+    }
+}
+
+class Preset {
+    public index: number;
+    public fakeIndex: number;
+    public caption: string;
+
+    constructor(index: number, fakeIndex: number) {
+        this.index = index;
+        this.fakeIndex = fakeIndex;
+        
+        this.caption = "";
+        switch (fakeIndex) {
+            case 1:
+                this.caption = "Edge";
+                break;
+            case 2:
+                this.caption = "Crunch";
+                break;
+            case 3:
+                this.caption = "Overdrive";
+                break;
+            default:
+                this.caption = "Clean";
         }
     }
 }
@@ -72,13 +101,13 @@ export const PresetGrid: React.FC<PresetGridProps> = ({ currentPreset, onSelectP
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                             {presetGroup.presets.map((preset) => (
                                 <button
-                                    key={preset}
-                                    className={`btn-preset ${currentPreset === preset ? 'active' : ''}`}
-                                    onClick={() => onSelectPreset(preset)}
+                                    key={preset.index}
+                                    className={`btn-preset ${currentPreset === preset.index ? 'active' : ''}`}
+                                    onClick={() => onSelectPreset(preset.index)}
                                     disabled={!isConnected}
                                 >
                                     <div className="flex flex-col items-center">
-                                        <span className="text-sm font-bold">{preset}</span>
+                                        <span className="text-sm font-bold">{preset.caption}</span>
                                     </div>
                                 </button>
                             ))}
