@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+.vs/NanoCortexWebUI/CopilotIndices/18.6.39611.21775/CodeChunks.db
+.vs/NanoCortexWebUI/CopilotIndices/18.6.39611.21775/SemanticSymbols.db
+.vs/NanoCortexWebUI.slnx/FileContentIndex/34c42ad9-db32-40d1-878a-ab8081d26cb7.vsidx
+.vs/NanoCortexWebUI.slnx/v18/.wsuo
+.vs/NanoCortexWebUI.slnx/v18/DocumentLayout.json

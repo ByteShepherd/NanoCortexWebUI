@@ -25,7 +25,6 @@ class PresetGroup {
 }
 
 export const PresetGrid: React.FC<PresetGridProps> = ({ currentPreset, onSelectPreset, isConnected }) => {
-    // Generate array [0..63]
 
     const presetGroups: PresetGroup[] = [
         new PresetGroup(0, 3, 'UAFX Pedals'),
@@ -36,8 +35,6 @@ export const PresetGrid: React.FC<PresetGridProps> = ({ currentPreset, onSelectP
         new PresetGroup(20, 23, 'Fender Pro'),
         new PresetGroup(24, 27, 'Vox AC30'),
     ];
-
-    //const presets = Array.from({ length: 64 }, (_, i) => i);
 
     const handlePrev = () => {
         onSelectPreset(Math.max(0, currentPreset - 1));
