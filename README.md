@@ -1,3 +1,85 @@
+# Nano Cortex Preset Switcher - Windows App
+
+## Installing Electron
+Using Electron due to its massive community ecosystem, the easiest way to integrate it into an existing Vite app is via 
+
+```bash
+npm install electron electron-builder --save-dev
+```
+## Configure Your Vite Output
+Electron reads local files out of a directory. By default, Vite uses absolute paths (like /assets/index.js), which break when opened locally by Electron. Change this to relative paths in your vite.config.js
+
+```javascript
+export default defineConfig({
+  plugins: [react()],
+  base: "./", // This ensures assets are resolved relatively
+});
+```
+## Create the Electron Main Script
+Create a new file named main.js in your root directory to tell Electron how to open your app window
+
+```javascript
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+
+  // If developing, load your Vite local server URL
+  // If production, load the built dist/index.html file
+  const isDev = !app.isPackaged;
+  if (isDev) {
+    win.loadURL("http://localhost:5173");
+  } else {
+    win.loadFile(path.join(__dirname, "dist/index.html"));
+  }
+}
+
+app.whenReady().then(createWindow);
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});
+```
+
+## Update package.json
+Point Electron to your main.js file and set up helper scripts to run and package your app
+```json
+{
+  "name": "my-windows-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "electron:dev": "electron .",
+    "electron:build": "vite build && electron-builder"
+  },
+  "build": {
+    "appId": "com.yourname.yourapp",
+    "files": [
+      "dist/**/*",
+      "main.js"
+    ],
+    "win": {
+      "target": "nsis"
+    }
+  }
+}
+```
+
+## To develop
+First start your Vite dev server (npm run dev), then in a separate terminal run npm run electron:dev.
+
+## To package your .exe file
+Run npm run electron:build. Your executable installer will generate inside a newly created dist_electron or dist folder.
+
 # Nano Cortex Preset Switcher
 
 A web-based MIDI controller for the Nano Cortex, built with React, Vite, and WebMIDI. This application allows you to switch presets, toggle effects, and control parameters on your Nano Cortex device directly from your browser.
